@@ -28,6 +28,7 @@ import {StudioTelemetryProvider} from './StudioTelemetryProvider'
 import {StudioThemeProvider} from './StudioThemeProvider'
 import {WorkspaceLoader} from './workspaceLoader'
 import {WorkspacesProvider} from './workspaces'
+import { PackageVersionStatusProvider } from './packageVersionStatus/PackageVersionStatusProvider'
 
 Refractor.registerLanguage(bash)
 Refractor.registerLanguage(javascript)
@@ -54,11 +55,16 @@ export function StudioProvider({
   unstable_history: history,
   unstable_noAuthBoundary: noAuthBoundary,
 }: StudioProviderProps) {
+
+  console.log('hi from StudioProvider')
+  
   const _children = (
     <WorkspaceLoader LoadingComponent={LoadingBlock} ConfigErrorsComponent={ConfigErrorsScreen}>
       <StudioTelemetryProvider config={config}>
         <LocaleProvider>
-          <ResourceCacheProvider>{children}</ResourceCacheProvider>
+          <PackageVersionStatusProvider>
+            <ResourceCacheProvider>{children}</ResourceCacheProvider>
+          </PackageVersionStatusProvider>
         </LocaleProvider>
       </StudioTelemetryProvider>
     </WorkspaceLoader>
