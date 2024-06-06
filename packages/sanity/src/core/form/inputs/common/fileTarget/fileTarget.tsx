@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react'
 
-import {extractDroppedFiles, extractPastedFiles} from './utils/extractFiles'
+import {extractDroppedFiles, extractPastedFiles, isPortableTextItem} from './utils/extractFiles'
 import {imageUrlToBlob} from './utils/imageUrlToBlob'
 
 export type FileInfo = {
@@ -141,10 +141,13 @@ export function fileTarget<ComponentProps>(Component: ComponentType<ComponentPro
         */
           enteredElements.current = [...new Set(enteredElements.current), event.currentTarget]
 
-          const fileTypes = Array.from(event.dataTransfer.items).map((item) => ({
-            type: item.type,
-            kind: item.kind,
-          }))
+          const fileTypes = Array.from(event.dataTransfer.items)
+            .map((item) => ({
+              type: item.type,
+              kind: item.kind,
+            }))
+            // Remove portable text files from the list of files so we don't interfere with the PTE block drag and drop
+            .filter((item) => !isPortableTextItem(item))
           onFilesOver(fileTypes)
         }
       },
