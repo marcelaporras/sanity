@@ -22,6 +22,7 @@ import {
   type RenderCustomMarkers,
 } from '../../types'
 import {type RenderBlockActionsCallback} from '../../types/_transitional'
+import {UploadTargetCard} from '../arrays/common/UploadTargetCard'
 import {ExpandedLayer, Root} from './Compositor.styles'
 import {Editor} from './Editor'
 import {useHotkeys} from './hooks/useHotKeys'
@@ -395,34 +396,43 @@ export function Compositor(props: Omit<InputProps, 'schemaType' | 'arrayFunction
 
   const editorNode = useMemo(
     () => (
-      <Editor
-        ariaDescribedBy={ariaDescribedBy}
-        elementRef={elementRef}
-        initialSelection={initialSelection}
-        hideToolbar={hideToolbar}
-        hotkeys={editorHotkeys}
-        isActive={isActive}
-        isFullscreen={isFullscreen}
-        onItemOpen={onItemOpen}
-        onCopy={onCopy}
-        onPaste={onPaste}
-        onToggleFullscreen={handleToggleFullscreen}
-        path={path}
-        rangeDecorations={rangeDecorations}
-        readOnly={readOnly}
-        renderAnnotation={editorRenderAnnotation}
-        renderBlock={editorRenderBlock}
-        renderChild={editorRenderChild}
-        renderEditable={renderEditable}
-        setPortalElement={setPortalElement}
-        scrollElement={scrollElement}
-        setScrollElement={setScrollElement}
-      />
+      <UploadTargetCard
+        types={editor.schemaTypes.portableText.of}
+        resolveUploader={props.resolveUploader}
+        onUpload={props.onUpload}
+        {...props.elementProps}
+        tabIndex={-1}
+      >
+        <Editor
+          ariaDescribedBy={ariaDescribedBy}
+          elementRef={elementRef}
+          initialSelection={initialSelection}
+          hideToolbar={hideToolbar}
+          hotkeys={editorHotkeys}
+          isActive={isActive}
+          isFullscreen={isFullscreen}
+          onItemOpen={onItemOpen}
+          onCopy={onCopy}
+          onPaste={onPaste}
+          onToggleFullscreen={handleToggleFullscreen}
+          path={path}
+          rangeDecorations={rangeDecorations}
+          readOnly={readOnly}
+          renderAnnotation={editorRenderAnnotation}
+          renderBlock={editorRenderBlock}
+          renderChild={editorRenderChild}
+          renderEditable={renderEditable}
+          setPortalElement={setPortalElement}
+          scrollElement={scrollElement}
+          setScrollElement={setScrollElement}
+        />
+      </UploadTargetCard>
     ),
 
     // Keep only stable ones here!
     [
       ariaDescribedBy,
+      editor.schemaTypes.portableText.of,
       editorHotkeys,
       editorRenderAnnotation,
       editorRenderBlock,
@@ -437,6 +447,9 @@ export function Compositor(props: Omit<InputProps, 'schemaType' | 'arrayFunction
       onItemOpen,
       onPaste,
       path,
+      props.elementProps,
+      props.onUpload,
+      props.resolveUploader,
       rangeDecorations,
       readOnly,
       renderEditable,
